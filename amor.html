@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Presentación para Ti</title>
+    <link rel="icon" href="diapos/pngwing.com.png" type="image/png">
+    <!-- Fuente de Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos generales */
+        /* Contenedor del body que asegura que los elementos sean independientes */
+        body {
+            font-family: 'Dancing Script', cursive;
+            background-color: #ffe6f0;
+            color: #4b2c3b;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            /* Cambiado para alinear elementos */
+            align-items: center;
+            min-height: 100vh; /* Cambiado de height a min-height para permitir crecimiento */
+            text-align: center;
+            overflow-y: auto;
+            /* Permitir desplazamiento si el contenido crece */
+            background-image: url('https://www.transparenttextures.com/patterns/soft-grid-5.png');
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #d74a8f;
+            /* Rosa oscuro */
+            margin-bottom: 20px;
+            font-family: 'Pacifico', cursive;
+            margin-top: 20px;
+        }
+
+        .slider {
+            position: relative;
+            width: 90%;
+            max-width: 900px;
+            height: 60vh;
+            /* Altura ajustada para versiones de escritorio */
+            overflow: hidden;
+            border: 5px solid #d74a8f;
+            /* Borde rosa */
+            border-radius: 20px;
+            box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.1);
+            /* Sombra suave */
+            display: flex;
+            /* Usamos flexbox para el slider */
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            /* Evita que el slider se encoja */
+        }
+
+        .slides {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* Ajustamos las imágenes para que se mantengan dentro del slider sin recortarse */
+        }
+
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            font-size: 2rem;
+            border: none;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        /* Estilos para dispositivos móviles */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+                /* Reducimos el tamaño del título */
+                margin-top: 10px;
+            }
+
+            .slider {
+                width: 95%;
+                /* Ancho más flexible */
+                height: 40vh;
+                /* Ajustamos la altura del slider para dispositivos móviles */
+            }
+
+            .slider-button {
+                font-size: 1.8rem;
+                padding: 12px;
+            }
+
+            /* Ajustamos la imagen dentro del slider */
+            .slide {
+                object-fit: contain;
+                /* Aseguramos que la imagen no se recorte */
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+                /* Más pequeño para pantallas muy pequeñas */
+                margin-top: 5px;
+            }
+
+            .slider {
+                width: 100%;
+                /* Ancho completo en dispositivos pequeños */
+                height: 26vh;
+                /* Menos altura para pantallas pequeñas */
+            }
+
+            .slider-button {
+                font-size: 1.5rem;
+                padding: 8px;
+            }
+        }
+
+        /* Ajustes para pantallas con resolución 1920x1080 */
+        @media (min-width: 1920px) {
+            .slider {
+                height: 39vh;
+                /* Ajustamos la altura para pantallas grandes como 1920x1080 */
+            }
+        }
+
+        /* Ajustes para pantallas con resolución 1366x768 */
+        @media (min-width: 1366px) and (max-width: 1919px) {
+            .slider {
+                height: 55vh;
+                /* Ajustamos la altura para pantallas de 1366x768 */
+            }
+        }
+
+        /* Fuente del botón */
+        #show-letter-button {
+            background-color: #d74a8f;
+            /* Rosa oscuro */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-family: 'Pacifico', cursive;
+            /* Fuente de "Para Mi Amor, Con Todo Mi Corazón" */
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        /* Efecto hover en el botón */
+        #show-letter-button:hover {
+            background-color: #b8407d;
+            /* Un tono más oscuro para el hover */
+        }
+
+        /* Contenedor de la carta (ahora invisible por defecto) */
+        .letter-container {
+            margin-top: 30px;
+            background-color: transparent;
+            /* Invisible al inicio */
+            border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            border: 2px solid transparent;
+            /* Sin borde al inicio */
+            box-shadow: none;
+            /* Sin sombra al inicio */
+            opacity: 0;
+            /* Invisible */
+            display: none;
+            /* Oculto inicialmente */
+            font-family: 'Pacifico', cursive;
+            font-size: 1.1rem;
+            color: #4b2c3b;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            /* Para respetar los saltos de línea */
+            transition: opacity 0.5s ease, background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+            margin-bottom: 20px; /* Ajusta según sea necesario */
+
+        }
+
+        /* Aparece con animación */
+        .letter-container.visible {
+            display: block;
+            /* Lo hacemos visible */
+            opacity: 1;
+            /* Cambiamos opacidad a visible */
+            background-color: #fff;
+            /* Fondo blanco */
+            border: 2px solid #d74a8f;
+            /* Bordes */
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+            /* Sombra */
+        }
+
+        /* Animación de la carta */
+        @keyframes typing {
+            0% {
+                width: 0;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        #letter-text {
+            overflow: hidden;
+            /* Esconde el texto que no se ha "impreso" */
+            white-space: pre-wrap;
+            /* Respetar saltos de línea */
+            animation: typing 5s steps(200) 1s 1 normal both;
+            /* Velocidad más rápida */
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Para Mi Amor, Con Todo Mi Corazón</h1>
+
+    <div class="slider">
+        <div class="slides">
+            <!-- Aquí van las imágenes de tus diapositivas -->
+            <img src="diapos/porfavor dimelo/Diapositiva1.PNG" alt="Diapositiva 1" class="slide">
+            <img src="diapos/porfavor dimelo/Diapositiva2.PNG" alt="Diapositiva 2" class="slide">
+            <img src="diapos/porfavor dimelo/Diapositiva3.PNG" alt="Diapositiva 3" class="slide">
+            <img src="diapos/porfavor dimelo/Diapositiva4.PNG" alt="Diapositiva 4" class="slide">
+            <img src="diapos/porfavor dimelo/Diapositiva5.PNG" alt="Diapositiva 5" class="slide">
+            <img src="diapos/porfavor dimelo/Diapositiva6.PNG" alt="Diapositiva 6" class="slide">
+            <img src="diapos/porfavor dimelo/Diapositiva7.PNG" alt="Diapositiva 7" class="slide">
+            <img src="diapos/porfavor dimelo/Diapositiva8.PNG" alt="Diapositiva 8" class="slide">
+            <img src="diapos/porfavor dimelo/Diapositiva9.PNG" alt="Diapositiva 9" class="slide">
+            <img src="diapos/porfavor dimelo/Diapositiva10.PNG" alt="Diapositiva 10" class="slide">
+        </div>
+
+        <!-- Botones de navegación -->
+        <button class="slider-button prev" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="slider-button next" onclick="moveSlide(1)">&#10095;</button>
+    </div>
+
+    <!-- Botón para mostrar la carta -->
+    <button id="show-letter-button">Te Amo</button>
+
+    <!-- Contenedor de la carta -->
+    <div id="letter-container" class="letter-container">
+        <p id="letter-text"></p>
+    </div>
+
+    <br>
+
+
+    <script>
+        let index = 0;
+
+        function moveSlide(direction) {
+            const slides = document.querySelectorAll('.slide');
+            const totalSlides = slides.length;
+
+            index = (index + direction + totalSlides) % totalSlides; // Permite un ciclo infinito
+            document.querySelector('.slides').style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        // La carta de amor que quieres mostrar
+        const letterContent = `Hoy quiero escribirte unas palabras que he sentido durante todo este tiempo, y que a veces no sé cómo expresarlas de la manera correcta. 
+Cuando te conocí, no imaginaba que en tan poco tiempo alguien tan especial como tú cambiaría tanto mi vida. 
+Al principio, solo te veía como una chica bonita y aplicada, pero nunca imaginé que detrás de esa imagen había una persona tan increíble.
+
+Recuerdo el momento exacto en el que tuvimos la oportunidad de hacer grupo. No solo me sorprendió la oportunidad de conocerte más, sino que me di cuenta de que detrás de esa perfección que imaginaba, eras una persona real, con tus luchas, tus sueños y, lo más importante, tu gran corazón. 
+Fue ahí cuando comencé a ver más allá, a darte más valor, y a darme cuenta de cuánto me importabas, más de lo que me imaginaba.
+
+El momento en que me disté un regalo, por primera vez en mi vida, me hizo darme cuenta de algo que nunca había sentido antes: me enamoré de ti. 
+Aunque al principio mis palabras eran tan solo sobre cosas superfluas, pronto empezaron a ser sobre cómo te sentías, sobre tus preocupaciones, sobre cómo podía ayudarte. 
+Y desde entonces, me di cuenta de que todo lo que quería era estar a tu lado, apoyarte, y hacerte feliz.
+
+Nunca pensé que encontraría a alguien como tú, que viera lo bueno en mí incluso cuando yo solo veía mis defectos. 
+Me disté algo que nunca imaginé tener: felicidad. 
+Gracias a ti, me siento más seguro, más amado y, sobre todo, más yo mismo. 
+Tú me sacaste de un lugar oscuro en mi vida, y me mostraste un mundo lleno de luz y belleza.
+
+No sé qué depara el futuro, pero sé que quiero vivirlo contigo. 
+No importa si es un minuto, un día, o toda una vida. 
+Lo único que sé es que me haces querer ser mejor, y por eso te agradezco siempre.
+
+Te amo más de lo que las palabras pueden expresar. 
+Gracias por estar en mi vida y por hacerla más hermosa.`;
+
+        // Función para mostrar la carta
+        document.getElementById("show-letter-button").addEventListener("click", function () {
+            const letterContainer = document.getElementById("letter-container");
+            const letterText = document.getElementById("letter-text");
+
+            // Muestra el contenedor con una animación
+            letterContainer.classList.add("visible");
+
+            // Asigna el contenido de la carta al parágrafo
+            letterText.textContent = ""; // Limpia el texto antes de empezar
+            let index = 0;
+
+            // Imprime la carta letra por letra
+            const interval = setInterval(() => {
+                if (index < letterContent.length) {
+                    letterText.textContent += letterContent[index];
+                    index++;
+                } else {
+                    clearInterval(interval); // Detiene el intervalo cuando termina la carta
+                }
+            }, 25); // Velocidad de impresión (más rápida)
+        });
+
+
+    </script>
+
+</body>
+
+</html>
